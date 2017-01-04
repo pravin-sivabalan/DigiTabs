@@ -1,3 +1,5 @@
+var tabTitles = {}
+
 chrome.windows.onCreated.addListener(function() {
   chrome.tabs.query({active: true, currentWindow: true}, function(tab){
     chrome.tabs.executeScript(tab.id,{
@@ -21,8 +23,14 @@ function numberTabs() {
       try {
           var id = tabs[i].id
           var tabNum = i + 1;
-          var title = tabs[i].title;
-          console.log(title);
+
+          if (id in tabTitles) {
+            var title = tabTitles[id]
+          } else {
+            var title = tabs[i].title;
+            tabTitles[id] = title;
+          }
+          
           chrome.tabs.executeScript(id,{
             code:"document.title = '" + tabNum + ". " + title + "'"
           });
