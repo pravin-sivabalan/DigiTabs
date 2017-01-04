@@ -19,14 +19,15 @@ chrome.tabs.onCreated.addListener(function() {
 
 chrome.tabs.onRemoved.addListener(function() {
   numberTabs();
-})
+});
 
 function customUpdateListner(tabId, info, tab) {
-    if (info.status === "loading") {
+    console.log(tab.id);
+    if (info.status === "complete") {
       chrome.tabs.executeScript(tab.id,{
         code:"document.title = '" + tabCurrNum[tab.id] + ". " + tab.title + "'"
       });
-        /* Now, let's relieve ourselves from our listener duties */
+
       chrome.tabs.onUpdated.removeListener(customUpdateListner);
       return;
     }
