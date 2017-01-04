@@ -12,23 +12,23 @@ chrome.tabs.onMoved.addListener(function() {
 });
 
 chrome.tabs.onCreated.addListener(function() {
-  console.log("new tab");
   numberTabs();
 })
 
 function numberTabs() {
   chrome.tabs.query({currentWindow: true}, function(tabs){
     for (var i = 0; i < tabs.length + 1; ++i) {
-      // try {
-          console.log(tabs[i]);
+      try {
+          var id = tabs[i].id
           var tabNum = i + 1;
-          chrome.tabs.executeScript(tabs[i].id,{
-            code:"document.title = "+tabNum+"."
+          var title = tabs[i].title;
+          console.log(title);
+          chrome.tabs.executeScript(id,{
+            code:"document.title = '" + tabNum + ". " + title + "'"
           });
-      // } catch (TypeError) {
-      //   console.log("hohoh");
-      //   continue;
-      // }
+      } catch (TypeError) {
+        continue;
+      }
     }
   })
 }
