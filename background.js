@@ -1,7 +1,21 @@
-var tabTitles = {}
-var tabCurrNum = {}
+var tabTitles = {} //stores title of tab (Key: tabId, Value: tab title)
+var tabCurrNum = {} //stores location of tab for tab update scenarios (Key: tabId, Value: numLoc)
 
-// TODO: Fix build up bug
+
+// When a tab is moved
+chrome.tabs.onMoved.addListener(function() {
+  numberTabs();
+});
+
+// When a tab is deleted
+chrome.tabs.onRemoved.addListener(function() {
+  numberTabs();
+});
+
+// When new tab is created
+chrome.tabs.onCreated.addListener(function() {
+  numberTabs();
+});
 
 chrome.windows.onCreated.addListener(function() {
   chrome.tabs.query({active: true, currentWindow: true}, function(tab){
@@ -11,75 +25,17 @@ chrome.windows.onCreated.addListener(function() {
   });
 });
 
-chrome.tabs.onMoved.addListener(function() {
-  numberTabs();
-})
-
-chrome.tabs.onRemoved.addListener(function() {
-  numberTabs();
-})
-
-chrome.tabs.onCreated.addListener(function() {
-  numberTabs();
-})
-
-chrome.tabs.onUpdated.addListener(function(tabId, info, tab){
-    if (info.url == null) {
-      console.log("ignore");
-    } else if (info.url === "New Tab"){
-      console.log(tab.title);
-    } else {
-      chrome.tabs.executeScript(tabId,{
-        code:"document.title = '" + tabCurrNum[tab.id] + ". " + tab.title + "'"
-      });
-    }
+// When a tabs URL is changed, thus changing title
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+  if(changeInfo.status == 'complete' && tab.active && !(tab.title.includes("New Tab"))){
+    tabTitles[tab.id] = tab.title;
+    chrome.tabs.executeScript(tabId,{
+      code:"document.title = '" + tabCurrNum[tab.id] + ". " + tab.title + "'"
+    });
+  }
 });
 
-// function customUpdateListner(tabId, info, tab) {
-//   if (info.url == null) {
-//     console.log("ignore");
-//   } else {
-//     console.log(tab.title);
-//     chrome.tabs.executeScript(tabId,{
-//       code:"document.title = '" + 1 + ". " + tab.title + "'"
-//     });
-//     chrome.tabs.onUpdated.removeListener(customUpdateListner);
-//     // return;
-//   }
-//     // if (info.status === "complete" && tab.active == true) {
-//     //   // chrome.tabs.executeScript(tab.id,{
-//     //   //   code:"document.title = '" + tabCurrNum[tab.id] + ". " + tab.title + "'"
-//     //   // });
-//     //   // chrome.tabs.onUpdated.removeListener(customUpdateListner);
-//     //   // return;
-//     //   console.log("A tab has been updated");
-//     //   chrome.tabs.onUpdated.removeListener(customUpdateListner);
-//     //   return
-//     // }
-// }
-// chrome.tabs.onUpdated.addListener(customUpdateListner);
-
-
-// chrome.tabs.onUpdated.addListener(function(id, url, tab) {log(tab.title);
-//   console.log(tab.id);
-//   console.log(tab.status);
-//
-//   var url = tab.url;
-//   if (url !== undefined && tab.status == "complete") {
-//     chrome.tabs.executeScript(tab.id,{
-//       code:"document.title = '" + tabCurrNum[tab.id] + ". " + tab.title + "'"
-//     });
-//     chrome.tabs.onUpdated.removeListener
-//   }
-//
-//
-//   //   var title = tab.title;
-//   //   tabTitles[tab.id] = title;
-//   // })
-//   // // numberTabs();
-//   // console.log("updated");
-// })
-
+// Iterates through tabs and adds number to tab title
 function numberTabs() {
   chrome.tabs.query({currentWindow: true}, function(tabs){
     for (var i = 0; i < tabs.length + 1; ++i) {
