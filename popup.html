@@ -3,8 +3,43 @@
       <script src="background.js"></script>
 </head>
 <body>
-  <h1>TabNumber</h1>
-  <button id="submit" type="button" name="button">Submit</button>
+  <div class="info">
+    <h1>TabNumber</h1>
+    <p>Hello! Numbered Tabs basically does what the name says. I hope it helps you out in whatever your trying to do.</p>
+    <p>Be sure to leave feedback.</p>
+  </div>
+
+  <div class="about">
+    <p>You can choose how you want the number formatted here:</p>
+    <input type="text" name="Number format" value="">
+    <button type="button" name="Submit">Submit</button>
+  </div>
+
 </body>
+
+<style media="screen">
+  body{
+    min-width:300px;
+    color: white;
+  }
+
+  .info{
+    background-color: #45AEC8;
+    
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 3px;
+    padding-bottom: 20px;
+  }
+
+  .about{
+    background-color: #383838;
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 3px;
+    padding-bottom: 20px;
+  }
+</style>
 
 </html>
