@@ -7,7 +7,7 @@ var tabCurrNum = {} //stores location of tab for tab update scenarios (Key: tabI
 // TODO: facebook
 
 
-setInterval(numberTabs(), 5000);
+setInterval(numberTabs(), 1000);
 
 
 // When a tab is moved
@@ -54,12 +54,12 @@ function numberTabs() {
 
           if (id in tabTitles) {
             var title = tabTitles[id];
-            console.log(id);
+            if (title === "Twitter") {
+              title = tabs[i].title
+            }
           } else {
             var title = tabs[i].title;
             tabTitles[id] = title;
-            console.log(id);
-            console.log("A new title has been added");
           }
 
           chrome.tabs.executeScript(id,{
