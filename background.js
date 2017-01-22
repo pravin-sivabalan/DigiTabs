@@ -56,7 +56,7 @@ function numberTabs() {
             var title = tabTitles[id];
             if (title === "Twitter") {
               title = tabs[i].title
-            }
+            } 
           } else {
             var title = tabs[i].title;
             tabTitles[id] = title;
