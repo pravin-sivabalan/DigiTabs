@@ -1,6 +1,14 @@
 var tabTitles = {} //stores title of tab (Key: tabId, Value: tab title)
 var tabCurrNum = {} //stores location of tab for tab update scenarios (Key: tabId, Value: numLoc)
 
+// Bug list
+// TODO: Youtube new video doesn't work
+// TODO: twitter new tweets doesn't reload
+// TODO: facebook
+
+
+setInterval(numberTabs(), 5000);
+
 
 // When a tab is moved
 chrome.tabs.onMoved.addListener(function() {
@@ -45,10 +53,13 @@ function numberTabs() {
           tabCurrNum[id] = tabNum;
 
           if (id in tabTitles) {
-            var title = tabTitles[id]
+            var title = tabTitles[id];
+            console.log(id);
           } else {
             var title = tabs[i].title;
             tabTitles[id] = title;
+            console.log(id);
+            console.log("A new title has been added");
           }
 
           chrome.tabs.executeScript(id,{
